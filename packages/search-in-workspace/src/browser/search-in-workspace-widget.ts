@@ -10,6 +10,7 @@ import { inject, injectable, postConstruct } from "inversify";
 import { SearchInWorkspaceResultTreeWidget } from "./search-in-workspace-result-tree-widget";
 import { h } from "@phosphor/virtualdom";
 import { SearchInWorkspaceOptions } from "../common/search-in-workspace-interface";
+import URI from "@theia/core/lib/common/uri";
 
 export interface SearchFieldState {
     className: string;
@@ -125,22 +126,28 @@ export class SearchInWorkspaceWidget extends BaseWidget implements StatefulWidge
         this.refresh();
     }
 
-    onAfterAttach(msg: Message) {
+    findInFolder(uri: URI): void {
+        this.showSearchDetails = true;
+        this.searchInWorkspaceOptions.include = [uri.toString()];
+        this.update();
+    }
+
+    protected onAfterAttach(msg: Message) {
         super.onAfterAttach(msg);
         VirtualRenderer.render(this.renderSearchHeader(), this.searchFormContainer);
         Widget.attach(this.resultTreeWidget, this.contentNode);
     }
 
-    onUpdateRequest(msg: Message) {
+    protected onUpdateRequest(msg: Message) {
         super.onUpdateRequest(msg);
         VirtualRenderer.render(this.renderSearchHeader(), this.searchFormContainer);
     }
 
-    onAfterShow(msg: Message) {
+    protected onAfterShow(msg: Message) {
         this.focusInputField();
     }
 
-    onActivateRequest(msg: Message) {
+    protected onActivateRequest(msg: Message) {
         super.onActivateRequest(msg);
         this.focusInputField();
     }

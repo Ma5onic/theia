@@ -78,7 +78,7 @@ export class RipgrepSearchInWorkspaceServer implements SearchInWorkspaceServer {
         if (opts && opts.include) {
             for (const include of opts.include) {
                 if (include !== "") {
-                    globs.push('--glob=**/' + include);
+                    globs.push(`--glob={**/${include},${include}/**}`);
                 }
             }
         }
